@@ -1,11 +1,13 @@
 # See https://medium.com/thecyphy/train-cnn-model-with-pytorch-21dafb918f48
 
 import torch
-import numpy as np
+# import numpy as np
 from model import NaturalSceneClassification
 from loader import load_images
-from PIL import Image
-from torchvision import transforms
+# from PIL import Image
+# from torchvision import transforms
+
+PATH = "saved-model.pt"
 
 
 @torch.no_grad()
@@ -32,6 +34,13 @@ def fit(epochs, learning_rate, model, train_loader, val_loader, opt_func=torch.o
         result['train_loss'] = torch.stack(train_losses).mean().item()
         model.epoch_end(epoch, result)
         history.append(result)
+
+        if epoch % 10 == 0:
+            print("Saving model dict")
+            torch.save(model.state_dict(), PATH)
+
+    print("Done, saving model dict")
+    torch.save(model.state_dict(), PATH)
     return history
 
 
@@ -63,9 +72,9 @@ if __name__ == '__main__':
     ################################################################################
     # Prediction
     ################################################################################
-    print("\n\nTesting predicting individual images")
-    img = Image.open("../../IMG_7707.jpg")
-    img = transforms.Resize((150, 150))(img)
-    img = transforms.ToTensor()(img)
-    img = img.unsqueeze(0)
-    print(f"Predicted Class : {predict_img_class(img, model)}")
+    # print("\n\nTesting predicting individual images")
+    # img = Image.open("../../IMG_7707.jpg")
+    # img = transforms.Resize((150, 150))(img)
+    # img = transforms.ToTensor()(img)
+    # img = img.unsqueeze(0)
+    # print(f"Predicted Class : {predict_img_class(img, model)}")
